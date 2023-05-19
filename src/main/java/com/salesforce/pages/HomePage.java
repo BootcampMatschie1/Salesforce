@@ -6,7 +6,7 @@ import com.framework.testng.api.base.ProjectSpecificMethods;
 public class HomePage extends ProjectSpecificMethods{
 	
 	public HomePage verifyHomePage() {
-		verifyDisplayed(locateElement(Locators.XPATH, "//span[text()='Home']"));
+		verifyDisplayed(locateElement(Locators.LINK_TEXT,"CRM/SFA"));
 		reportStep("Homepage is loaded", "pass");
 		return this;
 	}

@@ -6,6 +6,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -34,7 +35,6 @@ import com.framework.selenium.api.design.Element;
 import com.framework.selenium.api.design.Locators;
 import com.framework.utils.Reporter;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 
 
 public class SeleniumBase extends Reporter implements Browser, Element  {
@@ -49,40 +49,67 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			val = ele.getAttribute(attributeValue);
 		} catch (WebDriverException e) {
 			reportStep("Attribue value not able to fetch :" + e.getMessage(), "info");
+		} catch (Exception e) {
+			reportStep("Attribue value not able to fetch :" + e.getMessage(), "info", false);
+
 		}
 		return val;
 	}
 
 	protected void moveToElement(WebElement ele) {
-		act = new Actions(getDriver());
-		act.moveToElement(ele).perform();
+		try {
+			act = new Actions(getDriver());
+			act.moveToElement(ele).perform();
+		} catch (Exception e) {
+			reportStep("Not able to mouse hover" + e.getMessage(), "fail", true);
+		}
 	}
 	
 	protected void dragAndDrop(WebElement eleSoutce, WebElement eleTarget) {
-		act = new Actions(getDriver());
-		act.dragAndDrop(eleSoutce, eleTarget).perform();
+		try {
+			act = new Actions(getDriver());
+			act.dragAndDrop(eleSoutce, eleTarget).perform();
+		} catch (Exception e) {
+			reportStep("Not able to do drag and drop" + e.getMessage(), "fail", true);
+		}
 	}
 
 	protected void contextClick(WebElement ele) {
-		act = new Actions(getDriver());
-		act.contextClick(getWait().until(ExpectedConditions.elementToBeClickable(ele))).perform();
+		try {
+			act = new Actions(getDriver());
+			act.contextClick(getWait().until(ExpectedConditions.elementToBeClickable(ele))).perform();
+		} catch (Exception e) {
+			reportStep("Not able to do right click" + e.getMessage(), "fail", true);
+		}
 	}
 
 	protected void hoverAndClick(WebElement ele) {
-		act = new Actions(getDriver());
-		act.moveToElement(getWait().until(ExpectedConditions.elementToBeClickable(ele))).pause(5000).click().perform();
+		try {
+			act = new Actions(getDriver());
+			act.moveToElement(getWait().until(ExpectedConditions.elementToBeClickable(ele))).pause(5000).click().perform();
+		} catch (Exception e) {
+			reportStep("Not able to do hover and click" + e.getMessage(), "fail", true);
+		}
 	}
 
 	protected void doubleTap(WebElement ele) {
-		act = new Actions(getDriver());
-		act.click(getWait().until(ExpectedConditions.elementToBeClickable(ele))).click().perform();
-		reportStep("Element moved", "info");
+		try {
+			act = new Actions(getDriver());
+			act.click(getWait().until(ExpectedConditions.elementToBeClickable(ele))).click().perform();
+			
+		} catch (Exception e) {
+			reportStep("Not able to do double tap" + e.getMessage(), "fail", true);
+		}
 	}
 
 	protected void doubleClick(WebElement ele) {
-		act = new Actions(getDriver());
-		act.doubleClick(getWait().until(ExpectedConditions.elementToBeClickable(ele))).perform();
-		reportStep("Element double clicked", "info");
+		try {
+			act = new Actions(getDriver());
+			act.doubleClick(getWait().until(ExpectedConditions.elementToBeClickable(ele))).perform();
+			
+		} catch (Exception e) {
+			reportStep("Not able to do double click" + e.getMessage(), "fail", true);
+		}
 	}
 
 	public void waitForApperance(WebElement element) {
@@ -92,7 +119,7 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			e.printStackTrace();
 		}
 		try {
-			WebDriverWait wait = new WebDriverWait(getDriver(), 20);
+			WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(20));
 			wait.until(ExpectedConditions.visibilityOf(element));
 		} catch (Exception e) {
 			reportStep("Element did not appear after 20 seconds", "fail", false);
@@ -252,6 +279,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			}
 		} catch (WebDriverException e) {
 			reportStep("The Element " + ele + " could not be appended \n" + e.getMessage(), "fail");
+		} catch (Exception e) {
+			reportStep("The Element " + ele + " could not be appended \n" + e.getMessage(), "fail");
 		}
 	}
 
@@ -261,6 +290,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			ele.clear();
 		} catch (ElementNotInteractableException e) {
 			reportStep("The field is not Interactable \n" + e.getMessage(), "fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 	}
 
@@ -317,18 +348,21 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			reportStep("The Element " + ele + " is not Interactable \n" + e.getMessage(), "fail");
 		} catch (WebDriverException e) {
 			reportStep("The Element " + ele + " is not Interactable \n" + e.getMessage(), "fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 
 	}
 	public void type(WebElement ele, String data) {
 		try {
 			getWait().until(ExpectedConditions.visibilityOf(ele));
-			ele.clear();
 			ele.sendKeys("", "", data);
 		} catch (ElementNotInteractableException e) {
 			reportStep("The Element " + ele + " is not Interactable \n" + e.getMessage(), "fail");
 		} catch (WebDriverException e) {
 			reportStep("The Element " + ele + " is not Interactable \n" + e.getMessage(), "fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 
 	}
@@ -342,6 +376,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			reportStep("The Element " + ele + " is not Interactable \n" + e.getMessage(), "fail");
 		} catch (WebDriverException e) {
 			reportStep("The Element " + ele + " is not Interactable \n" + e.getMessage(), "fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 
 	}
@@ -382,6 +418,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			reportStep("The attribute value is " + attributeValue, "info");
 		} catch (WebDriverException e) {
 			reportStep("Not able to find attribute value \n" + e.getMessage(), "fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 		return attributeValue;
 	}
@@ -393,6 +431,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			sel.selectByVisibleText(value);
 		} catch (WebDriverException e) {
 			reportStep("Not able to select the drop down with text \n" + value, "fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 	}
 
@@ -403,6 +443,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			sel.selectByIndex(index);
 		} catch (WebDriverException e) {
 			reportStep("Not able to select the drop down with index " + index + " \n" + e.getMessage(), "fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 	}
 
@@ -413,6 +455,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			sel.selectByValue(value);
 		} catch (WebDriverException e) {
 			reportStep("Not able to select the drop down with value " + value + " \n" + e.getMessage(), "fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 	}
 
@@ -427,6 +471,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			}
 		} catch (WebDriverException e) {
 			reportStep("Unknown exception occured while verifying the Text \n" + e.getMessage(), "fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 
 		return false;
@@ -442,6 +488,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			}
 		} catch (WebDriverException e) {
 			reportStep("Unknown exception occured while verifying the Text \n" + e.getMessage(), "fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 		return false;
 	}
@@ -457,6 +505,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			}
 		} catch (WebDriverException e) {
 			reportStep("Unknown exception occured while verifying the Attribute Text \n" + e.getMessage(), "fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 		return false;
 	}
@@ -472,6 +522,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			}
 		} catch (WebDriverException e) {
 			reportStep("Unknown exception occured while verifying the Attribute Text \n" + e.getMessage(), "fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 
 	}
@@ -486,6 +538,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			}
 		} catch (WebDriverException e) {
 			reportStep("WebDriverException : \n" + e.getMessage(), "fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 		return false;
 
@@ -516,6 +570,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			}
 		} catch (WebDriverException e) {
 			reportStep("WebDriverException : \n" + e.getMessage(), "fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 		return false;
 	}
@@ -542,7 +598,7 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			setWait();
 			act = new Actions(getDriver());
 			getDriver().manage().window().maximize();
-			getDriver().manage().timeouts().implicitlyWait(90, TimeUnit.SECONDS);
+			getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(90));
 			getDriver().get(url);
 			reportStep("The Browser Launched in chrome browser with URL " + url, "pass");
 		} catch (Exception e) {
@@ -556,22 +612,18 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 		try {
 			if (browser.equalsIgnoreCase("chrome")) {
 				System.setProperty("webdriver.chrome.silentOutput", "true");
-			//	System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");
-				WebDriverManager.chromedriver().setup();
 				setDriver("chrome", headless);
 			} else if (browser.equalsIgnoreCase("firefox")) {
-				//System.setProperty("webdriver.gecko.driver", "./drivers/geckodriver.exe");
-				WebDriverManager.firefoxdriver().setup();
 				setDriver("firefox", headless);
 			} else if (browser.equalsIgnoreCase("ie")) {
-				//System.setProperty("webdriver.ie.driver", "./drivers/IEDriverServer.exe");
-				 WebDriverManager.iedriver().setup();
 				setDriver("ie",false);
+			}else if (browser.equalsIgnoreCase("edge")) {
+				setDriver("edge",false);
 			}
 			setWait();
 			getDriver().manage().window().maximize();
-			getDriver().manage().timeouts().implicitlyWait(90, TimeUnit.SECONDS);
-			getDriver().manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
+			getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(90));
+			getDriver().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
 			getDriver().get(url);
 		} catch (WebDriverException e) {
 			e.printStackTrace();
@@ -619,7 +671,7 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 	@Override
 	public WebElement locateElement(String value) {
 		try {
-			WebElement findElementById = getDriver().findElementById(value);
+			WebElement findElementById = getDriver().findElement(By.id(value));
 			return findElementById;
 		} catch (NoSuchElementException e) {
 			reportStep("The Element with locator id Not Found with value: " + value + "\n" + e.getMessage(), "fail");
@@ -656,6 +708,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 		} catch (NoSuchElementException e) {
 			reportStep("The Element with locator:" + type + " Not Found with value: " + value + "\n" + e.getMessage(),
 					"fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 		return null;
 	}
@@ -793,9 +847,9 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 		try {
 			getDriver().switchTo().frame(locateElement(Locators.XPATH,xpath));
 		} catch (NoSuchFrameException e) {
-			//reportStep("No such frame " + e.getMessage(), "warning", false);
+			reportStep("No such frame " + e.getMessage(), "fail", false);
 		} catch (Exception e) {
-			//reportStep("No such frame " + e.getMessage(), "fail", false);
+			reportStep("No such frame " + e.getMessage(), "fail", false);
 		}
 
 	}
@@ -816,7 +870,7 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 		try {
 			getDriver().switchTo().defaultContent();
 		} catch (Exception e) {
-			reportStep("No such window " + e.getMessage(), "fail", false);
+			reportStep("No such frame " + e.getMessage(), "fail", false);
 		}
 	}
 
@@ -853,6 +907,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			reportStep("The browser has been closed." + e.getMessage(), "fail");
 		} catch (IOException e) {
 			reportStep("The snapshot could not be taken " + e.getMessage(), "warning");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 		return number;
 	}
@@ -885,7 +941,7 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 		}
 
 		try {
-			WebDriverWait wait = new WebDriverWait(getDriver(), 10);
+			WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.invisibilityOf(element));
 		} catch (Exception e) {
 			reportStep("Element did not appear after 10 seconds", "fail", false);
@@ -910,6 +966,8 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 			reportStep("The Element " + ele + " is not Interactable \n" + e.getMessage(), "fail");
 		} catch (WebDriverException e) {
 			reportStep("The Element " + ele + " is not Interactable \n" + e.getMessage(), "fail");
+		} catch (Exception e) {
+			reportStep(e.getMessage(), "fail");
 		}
 
 	}
@@ -978,12 +1036,6 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 		getDriver().executeScript(js, ele);
 	}
 	
-	public static void generateProjectAndAuctionIds() {
-		int ranNum1 = (int) (Math.random() * 10000);
-		int ranNum2 = ranNum1+9999;
-		projectId = Integer.toString(ranNum1);
-		auctionRef = Integer.toString(ranNum2);
-	}
 
 	
 }
