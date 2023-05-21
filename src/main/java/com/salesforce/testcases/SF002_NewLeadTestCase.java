@@ -28,7 +28,7 @@ public class SF002_NewLeadTestCase extends ProjectSpecificMethods{
 		.enterUsername(username)
 		.enterPassword(password)
 		.clickLogin()
-		.clickAppsViewAll()
+		.clickViewAll()
 		.clickSalesMenu()
 		.clickLeadsMenu()
 		.clickNewLeads()

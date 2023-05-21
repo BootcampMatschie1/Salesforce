@@ -21,7 +21,7 @@ public class ProjectSpecificMethods extends SeleniumBase {
 	@BeforeMethod
 	public void preCondition() {
 
-		startApp("chrome", false, "http://leaftaps.com/opentaps/control/main");
+		startApp("chrome", false, "https://login.salesforce.com/");
 		setNode();
 
 	}
