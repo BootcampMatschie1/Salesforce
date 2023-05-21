@@ -7,11 +7,11 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
+import java.time.format.DateTimeFormatter;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -1036,6 +1036,12 @@ public class SeleniumBase extends Reporter implements Browser, Element  {
 		getDriver().executeScript(js, ele);
 	}
 	
+	public String chooseTomorrowDate() {
+		LocalDateTime today = LocalDateTime.now();
+		String tomorrowDate = today.plusDays(1).format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+		System.out.println("tomorrowDate:"+ tomorrowDate);
+		return tomorrowDate;
+	}
 
 	
 }

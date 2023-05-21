@@ -25,19 +25,17 @@ public class EditOpportunityPage extends ProjectSpecificMethods {
 		WebElement findOpName = locateElement(Locators.XPATH, "//label[text()='Opportunity Name']/following::input[1]");
 		clearAndType(findOpName, "Salesforce Automation by Suzzane");
 		String attribute = getAttribute(findOpName, "value1");
-		
-		
+		return this;
+		}
 	
-	
-
-		
-		
+	public EditOpportunityPage editCloseDateAsTomorrowDate() {
+		String chooseTomorrowDate = chooseTomorrowDate();
+		WebElement closeDate = locateElement(Locators.XPATH,"//label[text()='Close Date']/following-sibling::div//input");
+		closeDate.clear();
+		closeDate.sendKeys(chooseTomorrowDate);
 		return this;
 		
-		
 	}
-		
-	
 	
 	
 	
