@@ -12,7 +12,7 @@ public class DataLibrary {
 		XSSFWorkbook wbook;
 		Object[][] data = null ;
 		try {
-			wbook = new XSSFWorkbook("C:\\softwares\\data\\"+excelfileName+".xlsx");
+			wbook = new XSSFWorkbook(".\\data\\"+excelfileName+".xlsx");
 			XSSFSheet sheet = wbook.getSheetAt(0);
 			int rowCount = sheet.getLastRowNum();
 			int colCount = sheet.getRow(0).getLastCellNum();

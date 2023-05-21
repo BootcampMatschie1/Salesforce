@@ -31,7 +31,7 @@ public class LoginPage extends ProjectSpecificMethods {
 
 	public HomePage clickLogin() {
 		
-		click(locateElement(Locators.CLASS_NAME, "decorativeSubmit"));
+		click(locateElement(Locators.ID, "Login"));
 		return new HomePage();
 
 	}
